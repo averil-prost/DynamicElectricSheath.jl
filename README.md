@@ -1,5 +1,10 @@
 # DynamicElectricSheath.jl
 
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaVlasov.github.io/DynamicElectricSheath.jl/stable/)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaVlasov.github.io/DynamicElectricSheath.jl/dev/)
+[![Build Status](https://github.com/JuliaVlasov/DynamicElectricSheath.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/JuliaVlasov/DynamicElectricSheath.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Coverage](https://codecov.io/gh/JuliaVlasov/DynamicElectricSheath.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JuliaVlasov/DynamicElectricSheath.jl)
+
 Two-species Vlasov-Poisson solver on $[-1,1] \times \RR$ using
  
  with :
