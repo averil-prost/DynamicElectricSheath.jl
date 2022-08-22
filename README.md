@@ -24,10 +24,10 @@ Two-species Vlasov-Poisson solver on $[-1,1] \times \RR$ using
  
  - Initial data are in the file initial_data.hpp
  
- Author : Mehdi BASDI. 
- Date : 27/07/2022.
- Translation in Julia : Pierre Navaro & Averil Prost.
- Date : 05/08/2022.
+  * Author : Mehdi BASDI. 
+  * Date : 27/07/2022.
+  * Translation in Julia : Pierre Navaro (@pnavaro) & Averil Prost (@averil-prost).
+  * Date : 05/08/2022.
 
 ```bash
 git clone https://github.com/juliavlasov/DynamicElectricSheath.jl
