@@ -58,15 +58,19 @@ using FiniteDiffDynSheath
     fe[:, end] .= 0.0 # non-emmiting wall
 
 
-    compute_charge!(ρi, fi, dv)
-    compute_charge!(ρe, fe, dv)
-    compute_charge!(ρ, fi .- fe, dv)
+    for n = 1:Nt # loop over time
 
-    J_l, J_r = compute_current(fi, fe, vv, dv)
+        compute_charge!(ρi, fi, dv)
+        compute_charge!(ρe, fe, dv)
+        compute_charge!(ρ, fi .- fe, dv)
 
-    EE_minus, EE_plus = compute_e!(EE, ρ, λ, J_l, J_r, dx, dt)
+        J_l, J_r = compute_current(fi, fe, vv, dv)
 
-    advection!(fi, fe, vv_plus, vv_minus, EE_plus, EE_minus, ν, μ, dx, dv, dt)
+        EE_minus, EE_plus = compute_e!(EE, ρ, λ, J_l, J_r, dx, dt)
+
+        advection!(fi, fe, vv_plus, vv_minus, EE_plus, EE_minus, ν, μ, dx, dv, dt)
+
+    end
 
     @test true
 
