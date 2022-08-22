@@ -8,7 +8,7 @@ makedocs(;
     repo="https://github.com/JuliaVlasov/DynamicElectricSheath.jl/blob/{commit}{path}#{line}",
     format = Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://JuliaVlasov.github.io/VectorSpinVlasovMaxwell1D1V.jl",
+        canonical="https://JuliaVlasov.github.io/DynamicElectricSheath.jl",
         edit_link="main",
         assets=String[]),
     modules = [DynamicElectricSheath],
