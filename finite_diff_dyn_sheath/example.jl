@@ -1,9 +1,7 @@
-using Test
 using FiniteDiffDynSheath
+using ProgressMeter
 
-@testset "Initialization" begin
-
-    println("Welcome in main.")
+function run_simulation()
 
     physics = Physics()
 
@@ -58,7 +56,7 @@ using FiniteDiffDynSheath
     fe[:, end] .= 0.0 # non-emmiting wall
 
 
-    for n = 1:Nt # loop over time
+    @showprogress 1 for n = 1:Nt # loop over time
 
         compute_charge!(ρi, fi, dv)
         compute_charge!(ρe, fe, dv)
@@ -72,6 +70,6 @@ using FiniteDiffDynSheath
 
     end
 
-    @test true
-
 end
+
+@time run_simulation()

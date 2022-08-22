@@ -14,6 +14,7 @@ export compute_current
 
 """
 $(SIGNATURES)
+
 compute current at boundaries : rectangle integration of 
 
 ```math
@@ -61,11 +62,11 @@ export advection!
 $(SIGNATURES)
 
 ```math
-dt fi + v dx fi + E dv fi = nu * fe
+\\frac{d f_i}{dt} + v \\frac{d f_i}{dx} + E \\frac{d f_i}{dv} = \\nu * f_e
 ```
 
 ```math
-dt fe + v dx fe - 1/mu E dv fe = 0
+\\frac{d f_e}{dt} + v \\frac{d f_e}{dx} + \\frac{1}{\\mu] E \\frac{d f_e}{dv} = 0
 """
 function advection!(fi, fe, vv_plus, vv_minus, EE_plus, EE_minus, nu, mu, dx, dv, dt)
 

@@ -1,3 +1,14 @@
-# FiniteDiffDynSheath.jl
+```@meta
+CurrentModule = FiniteDiffDynSheath
+```
 
-Documentation for FiniteDiffDynSheath.jl
+# FiniteDiffDynSheath
+
+Documentation for FiniteDiffDynSheath
+
+```@index
+```
+
+```@autodocs
+Modules = [FiniteDiffDynSheath]
+```
