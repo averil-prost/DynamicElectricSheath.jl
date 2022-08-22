@@ -1,14 +1,14 @@
 ```@meta
-CurrentModule = FiniteDiffDynSheath
+CurrentModule = DynamicElectricSheath
 ```
 
-# FiniteDiffDynSheath
+# DynamicElectricSheath
 
-Documentation for FiniteDiffDynSheath
+Documentation for DynamicElectricSheath
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [FiniteDiffDynSheath]
+Modules = [DynamicElectricSheath]
 ```

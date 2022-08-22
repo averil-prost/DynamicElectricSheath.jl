@@ -1,5 +1,5 @@
 ```@meta
-CurrentModule = FiniteDiffDynSheath
+CurrentModule = DynamicElectricSheath
 ```
 
 # Example
@@ -8,7 +8,7 @@ CurrentModule = FiniteDiffDynSheath
 Set physical and numerical parameters
 
 ```@example test
-using FiniteDiffDynSheath
+using DynamicElectricSheath
 using Plots
 
 physics = Physics()

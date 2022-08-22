@@ -1,4 +1,4 @@
-module FiniteDiffDynSheath
+module DynamicElectricSheath
 
 using DocStringExtensions
 

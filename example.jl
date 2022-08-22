@@ -1,4 +1,4 @@
-using FiniteDiffDynSheath
+using DynamicElectricSheath
 using ProgressMeter
 
 function run_simulation()

@@ -1,4 +1,4 @@
-name = "FiniteDiffDynSheath"
+name = "DynamicElectricSheath"
 uuid = "82a5a15b-6a31-4a23-a3d4-0d9b5065a506"
 authors = ["Hivlashea team"]
 version = "0.1.0"

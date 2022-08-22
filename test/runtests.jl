@@ -1,5 +1,5 @@
 using Test
-using FiniteDiffDynSheath
+using DynamicElectricSheath
 
 @testset "Initialization" begin
 

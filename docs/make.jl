@@ -1,20 +1,22 @@
 using Documenter
-using FiniteDiffDynSheath
+using DynamicElectricSheath
 
-makedocs(
-    sitename = "FiniteDiffDynSheath",
+DocMeta.setdocmeta!(DynamicElectricSheath, :DocTestSetup, :(using DynamicElectricSheath); recursive=true)
+
+makedocs(;
+    sitename = "DynamicElectricSheath.jl",
+    repo="https://github.com/JuliaVlasov/DynamicElectricSheath.jl/blob/{commit}{path}#{line}",
     format = Documenter.HTML(;
-    prettyurls=get(ENV, "CI", "false") == "true"),
-    modules = [FiniteDiffDynSheath],
+        prettyurls=get(ENV, "CI", "false") == "true",
+        canonical="https://JuliaVlasov.github.io/VectorSpinVlasovMaxwell1D1V.jl",
+        edit_link="main",
+        assets=String[]),
+    modules = [DynamicElectricSheath],
     pages = ["index.md", "example.md"]
 )
 
-# Documenter can also automatically deploy documentation to gh-pages.
-# See "Hosting Documentation" and deploydocs() in the Documenter manual
-# for more information.
-#=deploydocs(
-    repo = "<repository url>"
-)=#
 
-
-
+deploydocs(;
+    repo="github.com/JuliaVlasov/DynamicElectricSheath.jl",
+    devbranch="main",
+)
