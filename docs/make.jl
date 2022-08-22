@@ -1,5 +1,8 @@
 using Documenter
 using DynamicElectricSheath
+using Plots
+
+ENV["GKSwstype"] = "100"
 
 DocMeta.setdocmeta!(DynamicElectricSheath, :DocTestSetup, :(using DynamicElectricSheath); recursive=true)
 
