@@ -54,6 +54,6 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
-            using VectorSpinVlasovMaxwell1D1V
-            DocMeta.setdocmeta!(VectorSpinVlasovMaxwell1D1V, :DocTestSetup, :(using VectorSpinVlasovMaxwell1D1V); recursive=true)
-            doctest(VectorSpinVlasovMaxwell1D1V)'
+            using DynamicElectricSheath
+            DocMeta.setdocmeta!(DynamicElectricSheath, :DocTestSetup, :(using DynamicElectricSheath); recursive=true)
+            doctest(DynamicElectricSheath)'
