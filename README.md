@@ -5,7 +5,7 @@
 [![Build Status](https://github.com/JuliaVlasov/DynamicElectricSheath.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/JuliaVlasov/DynamicElectricSheath.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/JuliaVlasov/DynamicElectricSheath.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JuliaVlasov/DynamicElectricSheath.jl)
 
-Two-species Vlasov-Poisson solver on $[-1,1] \times \RR$ using
+Two-species Vlasov-Poisson solver on $[-1,1] \times \mathbb{R}$ using
  
  with :
  - non-emitting boundary conditions on the distribution functions
@@ -17,12 +17,8 @@ Two-species Vlasov-Poisson solver on $[-1,1] \times \RR$ using
  
  Discretization :
  - Upwind for the transport
- - Integration for the Poisson equation -\\lambda^2 dx E = rho with trapeze formula for rho.  The integration  preserves the symmetry of rho if it is even.
+ - Integration for the Poisson equation $-\lambda^2 dx E = \rho$ with trapeze formula for $\rho$.  The integration  preserves the symmetry of $\rho$ if it is even.
  
- 
- Initial data :
- 
- - Initial data are in the file initial_data.hpp
  
   * Author : Mehdi BASDI. 
   * Date : 27/07/2022.
