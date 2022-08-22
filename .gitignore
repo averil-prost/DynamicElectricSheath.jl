@@ -15,3 +15,5 @@ build/*
 # intermediate files
 **/*.o
 
+finite_diff_dyn_sheath/Manifest.toml
+*.swp
