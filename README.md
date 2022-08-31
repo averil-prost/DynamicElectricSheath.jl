@@ -16,7 +16,7 @@ Two-species Vlasov-Poisson solver on $[-1,1] \times \mathbb{R}$
  
  Discretization :
  - Upwind for the transport
- - Integration for the Poisson equation $-\lambda^2 dx E = \rho$ with trapeze formula for $\rho$.  The integration  preserves the symmetry of $\rho$ if it is even.
+ - Integration for the Poisson equation $-\lambda^2 \frac{dE}{dx} = \rho$ with trapeze formula for $\rho$.  The integration  preserves the symmetry of $\rho$ if it is even.
  
 * Author : Mehdi BADSI. 27/07/2022.
 * Translation in Julia : [Averil Prost](https://github.com/averil-prost). 05/08/2022.
