@@ -34,8 +34,8 @@ If you want to develop the package use Revise.jl
 ```
 cd DynamicElectricSheath.jl
 julia --project
-using Revise
-using DynamicElectricSheath
+julia> using Revise
+julia> using DynamicElectricSheath
 ```
 
 The module is rebuilt after every change in src directory
