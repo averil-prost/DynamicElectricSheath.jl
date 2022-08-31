@@ -36,5 +36,6 @@ cd DynamicElectricSheath.jl
 julia --project
 using Revise
 using DynamicElectricSheath
+```
 
 The module is rebuilt after every change in src directory
