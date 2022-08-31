@@ -18,11 +18,8 @@ Two-species Vlasov-Poisson solver on $[-1,1] \times \mathbb{R}$
  - Upwind for the transport
  - Integration for the Poisson equation $-\lambda^2 dx E = \rho$ with trapeze formula for $\rho$.  The integration  preserves the symmetry of $\rho$ if it is even.
  
- 
-  * Author : Mehdi BASDI. 
-  * Date : 27/07/2022.
-  * Translation in Julia : [Averil Prost](https://github.com/averil-prost).
-  * Date : 05/08/2022.
+* Author : Mehdi BADSI. 27/07/2022.
+* Translation in Julia : [Averil Prost](https://github.com/averil-prost). 05/08/2022.
 
 ```bash
 git clone https://github.com/juliavlasov/DynamicElectricSheath.jl
