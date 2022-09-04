@@ -2,8 +2,8 @@ module DynamicElectricSheath
 
 using DocStringExtensions
 
-include("parameters.jl")
-include("initial_data.jl")
+include("parameters_1sp.jl")
+# include("parameters_2sp.jl")
 include("solver.jl")
 
 end

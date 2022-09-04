@@ -1,5 +1,39 @@
 using Parameters
 
+export E0 
+
+"""
+$(SIGNATURES)
+
+Electric field
+"""
+E0(x) = 0.0
+
+"""
+$(SIGNATURES)
+
+Initial mask
+"""
+mask(x) = 0.5 * (tanh((x + 0.1) ./ 0.1) - tanh((x - 0.1) ./ 0.1))
+
+export fi_0
+
+"""
+$(SIGNATURES)
+
+Ions distribution
+"""
+fi_0(x, v; μ = 0.5) = mask(x) * exp(-0.5 .* v^2) / sqrt(2π)
+
+export fe_0
+
+"""
+$(SIGNATURES)
+
+Electrons distribution
+"""
+fe_0(x, v; μ = 0.5) = sqrt(μ) * mask(x) * exp(-0.5 * μ * v^2) / sqrt(2π)
+
 export Physics
 
 """
@@ -13,7 +47,7 @@ $(TYPEDFIELDS)
     "Debye length"
     λ::Float64 = 0.5
     "Time horizon"
-    T::Float64 = 10.0
+    T::Float64 = 1.0
     "Thermal speed"
     μ::Float64 = 0.5
     "Lower bound space "
@@ -54,7 +88,7 @@ struct Discretization
     "Time step"
     dt::Float64
 
-    function Discretization(physics::Physics; Nx = 600, Nv = 1001)
+    function Discretization(physics::Physics; Nx = 50, Nv = 100)
 
         dx = (physics.xmax - physics.xmin) / Nx
         dv = (physics.vmax - physics.vmin) / Nv
@@ -66,4 +100,22 @@ struct Discretization
         new(Nx, Nv, dx, dv, CFL_x, CFL_v, Nt, dt)
 
     end
+end
+
+export IOparameters
+
+"""
+$(TYPEDEF)
+
+Folders for inputs and outputs.
+
+$(TYPEFIELDS)
+"""
+@with_kw struct IOparameters 
+    "Initial data source"
+    Init_source::String = "analytical" # "loaded"
+    "Initial data folder"
+    Init_folder::String = "data/two_species"
+    "Output folder"
+    Output_folder::String = "data/two_species"
 end
