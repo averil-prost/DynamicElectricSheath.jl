@@ -10,8 +10,8 @@ Electric field
     E(x) = - \\partial \\phi (x) = - x
 ```
 """
-# E0(x) = min.(1.0, max.(-1.0, -x))
-E0(x) = -x
+E0(x) = min.(1.0, max.(-1.0, -x))
+# E0(x) = -x
 
 export f_0
 
@@ -22,7 +22,7 @@ Particles distribution
 """
 function f_0(x, v)
     coeff = 1.0 - x^2 - v^2
-    1 / (pi * sqrt(abs(coeff))) * (coeff >= 0.0)
+    1 / (pi * sqrt(abs(coeff))) * (coeff > 1e-8)
 end
 
 export Physics
@@ -34,15 +34,15 @@ $(TYPEDFIELDS)
 """
 @with_kw struct Physics
     "Time horizon"
-    T::Float64 = 1.0
-    "Lower bound space "
-    xmin::Float64 = -1.0
-    "Upper bound space "
-    xmax::Float64 = 1.0
-    "Lower bound speed "
-    vmin::Float64 = -10.0 #-5.0/sqrt(μ); 
-    "Uupper bound speed "
-    vmax::Float64 = 10.0 #5.0/sqrt(μ); 
+    T::Float64 = 0.1
+    "Lower bound space"
+    xmin::Float64 = -1.5
+    "Upper bound space"
+    xmax::Float64 = 1.5
+    "Lower bound speed"
+    vmin::Float64 = -2.0 #-5.0/sqrt(μ); 
+    "Upper bound speed"
+    vmax::Float64 = 2.0 #5.0/sqrt(μ); 
 end
 
 export Discretization
@@ -78,9 +78,12 @@ struct Discretization
         dx = (physics.xmax - physics.xmin) / Nx
         dv = (physics.vmax - physics.vmin) / Nv
         CFL_x = 0.5 * dx / physics.vmax
-        CFL_v = 0.1dv
-        Nt = floor(Int, physics.T / min(CFL_x, CFL_v)) + 1
-        dt = physics.T / Nt
+        CFL_v = 0.5 * dv / 10
+        dt = min(0.8 * min(CFL_x, CFL_v), physics.T / 10)
+        Nt = ceil(Int, physics.T / dt)
+
+        # Nt = floor(Int, physics.T / min(CFL_x, CFL_v)) + 1
+        # dt = physics.T / Nt
 
         new(Nx, Nv, dx, dv, CFL_x, CFL_v, Nt, dt)
 

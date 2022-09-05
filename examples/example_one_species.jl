@@ -2,7 +2,7 @@ using DynamicElectricSheath
 using ProgressMeter
 using Plots 
 
-function run_simulation(Nx)
+function run_simulation(Nx, Nv)
 
     # ioparams = IOparameters()
 
@@ -12,7 +12,7 @@ function run_simulation(Nx)
     xmin, xmax = physics.xmin, physics.xmax
     vmin, vmax = physics.vmin, physics.vmax
 
-    numerics = Discretization(physics, Nx=Nx, Nv=2*Nx+1)
+    numerics = Discretization(physics, Nx=Nx, Nv=Nv)
 
     Nt = numerics.Nt
     dt = numerics.dt
@@ -37,38 +37,37 @@ function run_simulation(Nx)
     EE = E0.(xx)        # electric field
     EExact = copy(EE)   # should be stationary
     f = f_0.(xx, vv')   # particle density
+    f_old = 1.0 * f     # to optimize parallel version
     source = 0.0 * f    # no source for the advection
     ρ = zeros(Nx + 1)   # charge density
+    ρexact = -1.0 * (-1.0 .< xx .< 1.0)
 
     # Boundary conditions (all 0, never updated afterwards)
-    f[begin, :] .= 0.0
-    f[end, :] .= 0.0 # speed distribution is almost 0 
+    f[begin,:] .= 0.0
+    f[end,  :] .= 0.0 
     f[:, begin] .= 0.0
-    f[:, end] .= 0.0 # non-emmiting wall
+    f[:, end] .= 0.0 
 
-    # @showprogress 1 for n = 1:Nt # loop over time
-    # @gif for n = 1:Nt # loop over time
-    for n = 1:Nt # loop over time
-
+    @showprogress 1 for n = 1:Nt # loop over time
         compute_charge!(ρ, -f, dv)
-
         EE_minus, EE_plus = compute_e!(EE, ρ, 1.0, Nx, dx) # λ=1
+        # advection!(f, vv_plus, vv_minus, EE_plus, EE_minus, source, dx, dv, dt)
+        advection!(f, f_old, vv_plus, vv_minus, EE_plus, EE_minus, source, dx, dv, dt)
+    end 
 
-        advection!(f, vv_plus, vv_minus, EE_minus, EE_plus, source, dx, dv, dt)
+    
+    # Error on ρ
+    err = abs.(ρ - ρexact)
+    errL∞ = maximum(err) / maximum(abs.(ρexact))
+    errL¹ = sum(err) / sum(abs.(ρexact))
+    println("Erreur ρ - Nx : $Nx, Erreur : L∞ $errL∞, L¹ $errL¹")
+    
+    # # Error on E
+    # err = abs.(EE - EExact)
+    # errL∞ = maximum(err) / maximum(abs.(EExact))
+    # errL¹ = sum(err) / sum(abs.(EExact))
+    # println("Erreur E - Nx : $Nx, Erreur : L∞ $errL∞, L¹ $errL¹")
 
-        # if (mod(n,ceil(Int,Nt/20))==0)
-        #     errL∞ = maximum(abs.(EE - EExact))
-        #     errL¹ = sum(abs.(EE-EExact)) * dx
-        #     println("Nx : $Nx, Erreur à $n / $Nt : L∞ $errL∞, L¹ $errL¹")
-        # end
-
-        # plot(xx, EE)
-    end # every 20
-
-
-    errL∞ = maximum(abs.(EE - EExact))
-    errL¹ = sum(abs.(EE-EExact)) * dx
-    println("Nx : $Nx, Erreur : L∞ $errL∞, L¹ $errL¹")
     return errL∞, errL¹ 
 end
 
@@ -76,13 +75,13 @@ end
 # Main 
 #########################
 
-# Nxs = [50, 100, 200, 400]
-Nxs = 100:10:300
-# Nxs = [250]
+# Nxs = [100, 200, 400, 800]
+Nxs = [2400]
+Nvs = [2048]
 errors = zeros(length(Nxs),2)
 
 @time for (iNx, Nx) in enumerate(Nxs)
-    errors[iNx,:] .= run_simulation(Nx)
-end
+    errors[iNx,:] .= run_simulation(Nx, 2*Nx)
+end 
 
 println("Errors : \n", errors)

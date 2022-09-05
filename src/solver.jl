@@ -63,45 +63,6 @@ end
 
 export advection!
 
-# """
-# $(SIGNATURES)
-
-# ```math
-# \\frac{d f_i}{dt} + v \\frac{d f_i}{dx} + E \\frac{d f_i}{dv} = \\nu * f_e
-# ```
-
-# ```math
-# \\frac{d f_e}{dt} + v \\frac{d f_e}{dx} - \\frac{1}{\\mu} E \\frac{d f_e}{dv} = 0
-# ```
-# """
-# function advection!(fi, fe, vv_plus, vv_minus, EE_plus, EE_minus, nu, mu, dx, dv, dt)
-
-#     Nx = size(fi, 1) - 1
-#     Nv = size(fi, 2) - 1
-
-#     @views fi[2:Nx, 2:Nv] .+= (
-#         -(dt / dx) .* (
-#             vv_plus[2:Nv]' .* (fi[2:Nx, 2:Nv] .- fi[1:Nx-1, 2:Nv]) .+
-#             vv_minus[2:Nv]' .* (fi[3:Nx+1, 2:Nv] .- fi[2:Nx, 2:Nv])
-#         ) .-
-#         (dt / dv) .* (
-#             EE_plus[2:Nx] .* (fi[2:Nx, 2:Nv] .- fi[2:Nx, 1:Nv-1]) .+
-#             EE_minus[2:Nx] .* (fi[2:Nx, 3:Nv+1] .- fi[2:Nx, 2:Nv])
-#         ) .+ dt * nu .* fe[2:Nx, 2:Nv]
-#     )
-#     @views fe[2:Nx, 2:Nv] .+= (
-#         -(dt / dx) .* (
-#             vv_plus[2:Nv]' .* (fe[2:Nx, 2:Nv] .- fe[1:Nx-1, 2:Nv]) .+
-#             vv_minus[2:Nv]' .* (fe[3:Nx+1, 2:Nv] .- fe[2:Nx, 2:Nv])
-#         ) .+
-#         (dt / (dv * mu)) .* (
-#             EE_minus[2:Nx] .* (fe[2:Nx, 2:Nv] .- fe[2:Nx, 1:Nv-1]) .+
-#             EE_plus[2:Nx] .* (fe[2:Nx, 3:Nv+1] .- fe[2:Nx, 2:Nv])
-#         )
-#     )
-
-# end
-
 """
 $(SIGNATURES)
 
@@ -115,7 +76,6 @@ function advection!(fs, axp, axm, avp, avm, source, dx, dv, dt)
     Nx = size(fs, 1) - 1
     Nv = size(fs, 2) - 1
 
-    # center of the domain
     @views fs[2:Nx, 2:Nv] .+= (
         -(dt / dx) .* (
             axp[2:Nv]' .* (fs[2:Nx, 2:Nv] .- fs[1:Nx-1, 2:Nv]) .+
@@ -126,27 +86,34 @@ function advection!(fs, axp, axm, avp, avm, source, dx, dv, dt)
             avm[2:Nx] .* (fs[2:Nx, 3:Nv+1] .- fs[2:Nx, 2:Nv])
         ) .+ dt * source[2:Nx, 2:Nv]
     )
+end
 
-    i0 = findlast(axp .< 1e-8) # last index such that v <= 0.0
-    # region (x=-1, v<=0)
-    @views fs[1,2:i0] .+= (
-        -(dt / dx) .* (
-            axm[2:i0] .* (fs[2, 2:i0] .- fs[1, 2:i0])
-        ) .-
-        (dt / dv) .* (
-            avp[1] .* (fs[1, 2:i0] .- fs[1, 1:i0-1]) .+
-            avm[1] .* (fs[1, 3:i0+1] .- fs[1, 2:i0])
-        ) .+ dt * source[1, 2:i0]
-    )
 
-    # region (x=1, v>0)
-    @views fs[end,i0:Nv] .+= (
-        -(dt / dx) .* (
-            axp[i0:Nv] .* (fs[end, i0:Nv] .- fs[end-1, i0:Nv]) 
-        ) .-
-        (dt / dv) .* (
-            avp[end] .* (fs[end, i0:Nv] .- fs[end, i0-1:Nv-1]) .+
-            avm[end] .* (fs[end, i0+1:Nv+1] .- fs[end, i0:Nv])
-        ) .+ dt * source[end, i0:Nv]
-    )
+"""
+$(SIGNATURES)
+
+Upwind scheme for the advection equation (parallel version).
+The matrix fs_old is allocated only once at the beginning of the program. 
+
+```math
+\\frac{\\partial f_s}{\\partial t} + a_{x} \\frac{\\partial f_s}{\\partial x} + a_{v} \\frac{\\partial f_s}{\\partial v} = \\text{source}
+```
+"""
+function advection!(fs, fs_old, axp, axm, avp, avm, source, dx, dv, dt)
+    Nx = size(fs, 1) - 1
+    Nv = size(fs, 2) - 1
+
+    fs_old .= 1*fs # to avoid concurrent access to fs
+    for i=2:Nx
+        @Threads.threads for j=2:Nv
+            fs[i,j] += - (dt / dx) .* (
+                axp[j] .* (fs_old[i,j] .- fs_old[i-1,j]) .+
+                axm[j] .* (fs_old[i+1,j] .- fs_old[i,j])
+            ) .-
+            (dt / dv) .* (
+                avp[i] .* (fs_old[i,j] .- fs_old[i,j-1]) .+
+                avm[i] .* (fs_old[i,j+1] .- fs_old[i,j])
+            ) .+ dt * source[i,j]
+        end
+    end
 end

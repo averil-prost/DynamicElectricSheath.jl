@@ -45,11 +45,11 @@ $(TYPEDFIELDS)
     "Collision frequency"
     ν::Float64 = 20.0
     "Debye length"
-    λ::Float64 = 0.5
+    λ::Float64 = 0.1 # physical : 0.1
     "Time horizon"
     T::Float64 = 1.0
     "Thermal speed"
-    μ::Float64 = 0.5
+    μ::Float64 = 0.5 # physical : 1/3000
     "Lower bound space "
     xmin::Float64 = -1.0
     "Upper bound space "
@@ -93,9 +93,12 @@ struct Discretization
         dx = (physics.xmax - physics.xmin) / Nx
         dv = (physics.vmax - physics.vmin) / Nv
         CFL_x = 0.5 * dx / physics.vmax
-        CFL_v = physics.μ * 0.1dv
-        Nt = floor(Int, physics.T / min(CFL_x, CFL_v)) + 1
-        dt = physics.T / Nt
+        CFL_v = physics.μ * 0.5 * dv / 10 # |E| supposed bounded by 10
+        dt = min(0.8 * min(CFL_x, CFL_v), physics.T / 10)
+        Nt = ceil(Int, physics.T / dt)
+
+        # Nt = floor(Int, physics.T / min(CFL_x, CFL_v)) + 1
+        # dt = physics.T / Nt
 
         new(Nx, Nv, dx, dv, CFL_x, CFL_v, Nt, dt)
 
@@ -109,7 +112,7 @@ $(TYPEDEF)
 
 Folders for inputs and outputs.
 
-$(TYPEFIELDS)
+$(TYPEDFIELDS)
 """
 @with_kw struct IOparameters 
     "Initial data source"
