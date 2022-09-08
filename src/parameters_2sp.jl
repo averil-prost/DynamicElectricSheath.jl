@@ -14,7 +14,7 @@ $(SIGNATURES)
 
 Initial mask
 """
-mask(x) = 0.5 * (tanh((x + 0.1) ./ 0.1) - tanh((x - 0.1) ./ 0.1))
+mask(x) = 0.5 * (tanh((x + 0.8) ./ 0.1) - tanh((x - 0.8) ./ 0.1))
 
 export fi_0
 
@@ -31,7 +31,7 @@ export fe_0
 $(SIGNATURES)
 
 Electrons distribution
-"""
+""" 
 fe_0(x, v; μ = 0.5) = sqrt(μ) * mask(x) * exp(-0.5 * μ * v^2) / sqrt(2π)
 
 export Physics
@@ -45,19 +45,21 @@ $(TYPEDFIELDS)
     "Collision frequency"
     ν::Float64 = 20.0
     "Debye length"
-    λ::Float64 = 0.1 # physical : 0.1
+    λ::Float64 = 0.5 # physical : 0.1
     "Time horizon"
-    T::Float64 = 1.0
+    # T::Float64 = 0.025 # really short time
+    # T::Float64 = 0.025 # short time
+    T::Float64 = 200.0 # long time
     "Thermal speed"
-    μ::Float64 = 0.5 # physical : 1/3000
+    μ::Float64 = 0.01 # physical : 1/3000
     "Lower bound space "
     xmin::Float64 = -1.0
     "Upper bound space "
     xmax::Float64 = 1.0
     "Lower bound speed "
-    vmin::Float64 = -10.0 #-5.0/sqrt(μ); 
+    vmin::Float64 = -50.0 #-5.0/sqrt(μ); 
     "Uupper bound speed "
-    vmax::Float64 = 10.0 #5.0/sqrt(μ); 
+    vmax::Float64 = 50.0 #5.0/sqrt(μ); 
 end
 
 export Discretization

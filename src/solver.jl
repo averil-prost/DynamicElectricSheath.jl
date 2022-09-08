@@ -72,7 +72,7 @@ Upwind scheme for the advection equation.
 \\frac{\\partial f_s}{\\partial t} + a_{x} \\frac{\\partial f_s}{\\partial x} + a_{v} \\frac{\\partial f_s}{\\partial v} = \\text{source}
 ```
 """
-function advection!(fs, axp, axm, avp, avm, source, dx, dv, dt)
+function advection!(fs, axp, axm, avp, avm, source, dx, dv, dt, i0)
     Nx = size(fs, 1) - 1
     Nv = size(fs, 2) - 1
 
@@ -85,6 +85,28 @@ function advection!(fs, axp, axm, avp, avm, source, dx, dv, dt)
             avp[2:Nx] .* (fs[2:Nx, 2:Nv] .- fs[2:Nx, 1:Nv-1]) .+
             avm[2:Nx] .* (fs[2:Nx, 3:Nv+1] .- fs[2:Nx, 2:Nv])
         ) .+ dt * source[2:Nx, 2:Nv]
+    )
+
+    # region (x=-1, v<0) : speed in x is negative
+    @views fs[1, 2:i0] .+= (
+        -(dt / dx) .* (
+            axm[2:i0] .* (fs[2, 2:i0] .- fs[1, 2:i0])
+        ) .-
+        (dt / dv) .* (
+            avp[1] .* (fs[1, 2:i0] .- fs[1, 1:i0-1]) .+
+            avm[1] .* (fs[1, 3:i0+1] .- fs[1, 2:i0])
+        ) .+ dt * source[1, 2:i0]
+    )
+
+    # region (x=1, x>0) : speed in x is positive
+    @views fs[end, i0:Nv] .+= (
+        -(dt / dx) .* (
+            axp[i0:Nv] .* (fs[end, i0:Nv] .- fs[end-1, i0:Nv])
+        ) .-
+        (dt / dv) .* (
+            avp[end] .* (fs[end, i0:Nv] .- fs[end, i0-1:Nv-1]) .+
+            avm[end] .* (fs[end, i0+1:Nv+1] .- fs[end, i0:Nv])
+        ) .+ dt * source[end, i0:Nv]
     )
 end
 
